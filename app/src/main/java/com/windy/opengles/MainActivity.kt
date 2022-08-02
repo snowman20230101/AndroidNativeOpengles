@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity() {
     companion object {
         // Used to load the 'opengles' library on application startup.
         init {
-            System.loadLibrary("opengles")
+            System.loadLibrary("native-opengles")
         }
     }
 }

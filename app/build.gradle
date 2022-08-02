@@ -19,6 +19,8 @@ android {
                 cppFlags ''
             }
         }
+
+        ndkVersion '21.4.7075529'
     }
 
     buildTypes {
@@ -43,6 +45,8 @@ android {
     buildFeatures {
         viewBinding true
     }
+
+    ndkVersion '21.4.7075529'
 }
 
 dependencies {
