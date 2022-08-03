@@ -20,8 +20,8 @@ void TriangleSample::loadImage(NativeImage *pImage) {
 
 void TriangleSample::init() {
     LOGD("TriangleSample::init()");
-//    if (m_programObj != 0)
-//        return;
+    if (m_programObj != 0)
+        return;
     char vShaderStr[] =
             "#version 300 es                          \n"
             "layout(location = 0) in vec4 vPosition;  \n"
@@ -50,11 +50,13 @@ void TriangleSample::draw(int screenW, int screenH) {
             0.5f, -0.5f, 0.0f,
     };
 
-    if (m_programObj == 0)
+    if (m_programObj == 0) {
+        LOGI("TriangleSample::draw() m_programObj=%d", m_programObj);
         return;
+    }
 
     glClear(GL_STENCIL_BUFFER_BIT | GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glClearColor(1.0, 1.0, 1.0, 1.0);
+    glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 
     // Use the program object
     glUseProgram(m_programObj);

@@ -13,7 +13,7 @@ public:
     GLSampleBase() {
         m_vertexShader = 0;
         m_fragmentShader = 0;
-        m_programObj = -1;
+        m_programObj = 0;
         m_surfaceWidth = 0;
         m_surfaceHeight = 0;
     };

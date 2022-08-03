@@ -32,7 +32,7 @@ void GLRenderContext::destroyInstance() {
 
 void GLRenderContext::onSurfaceCreated() {
     LOGD("GLRenderContext::onSurfaceCreated()");
-    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+//    glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     // call to OpenGL ES API with no current context (logged once per thread)
     // TODO 这里opengl 的 东西必须在 GLThread 中调用
     m_pCurSample->init();
