@@ -31,7 +31,7 @@
 #include <GLES2/gl2ext.h>
 
 // 日志系统
-#define TAG_FFMPEG "FFMPEG"
+#define TAG_FFMPEG "NATIVE-GLES"
 #define LOGI(...) __android_log_print(ANDROID_LOG_INFO, TAG_FFMPEG, __VA_ARGS__)
 #define LOGD(...) __android_log_print(ANDROID_LOG_DEBUG, TAG_FFMPEG, __VA_ARGS__)
 #define LOGE(...) __android_log_print(ANDROID_LOG_ERROR, TAG_FFMPEG, __VA_ARGS__)

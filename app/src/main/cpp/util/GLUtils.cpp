@@ -5,33 +5,33 @@
 #include "GLUtils.h"
 
 GLuint GLUtils::loadShader(GLenum shaderType, const char *pSource) {
-    GLuint shader = 0;
+    GLuint shaderId;
     FUN_BEGIN_TIME("GLUtils::loadShader")
-        shader = glCreateShader(shaderType);
-        if (shader) {
-            glShaderSource(shader, 1, &pSource, NULL);
-            glCompileShader(shader);
-            GLint compiled = 0;
-            glGetShaderiv(shader, GL_COMPILE_STATUS, &compiled);
-            if (!compiled) {
-                GLint infoLen = 0;
-                glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &infoLen);
-                if (infoLen) {
-                    char *buf = (char *) malloc((size_t) infoLen);
-                    if (buf) {
-                        glGetShaderInfoLog(shader, infoLen, NULL, buf);
-                        LOGE("GLUtils::loadShader Could not compile shader %d:\n%s\n",
-                             shaderType,
-                             buf);
-                        free(buf);
-                    }
-                    glDeleteShader(shader);
-                    shader = 0;
+        shaderId = glCreateShader(shaderType);
+        glShaderSource(shaderId, 1, &pSource, NULL);
+        glCompileShader(shaderId);
+        GLint compiled = 0;
+        glGetShaderiv(shaderId, GL_COMPILE_STATUS, &compiled);
+        if (!compiled) {
+            GLint infoLen = 0;
+            glGetShaderiv(shaderId, GL_INFO_LOG_LENGTH, &infoLen);
+            if (infoLen) {
+                char *buf = (char *) malloc((size_t) infoLen);
+                if (buf) {
+                    glGetShaderInfoLog(shaderId, infoLen, NULL, buf);
+                    LOGE("GLUtils::loadShader Could not compile shader %d:\n%s\n",
+                         shaderType,
+                         buf);
+                    free(buf);
                 }
+                glDeleteShader(shaderId);
+                shaderId = 0;
             }
         }
     FUN_END_TIME("GLUtils::loadShader")
-    return shader;
+
+    LOGD("GLUtils::loadShader() shaderId=%d", shaderId);
+    return shaderId;
 }
 
 GLuint GLUtils::createProgram(const char *pVertexShaderSource, const char *pFragShaderSource,
@@ -75,7 +75,7 @@ GLuint GLUtils::createProgram(const char *pVertexShaderSource, const char *pFrag
             }
         }
     FUN_END_TIME("GLUtils::createProgram")
-    LOGE("GLUtils::createProgram program = %d", program);
+    LOGD("GLUtils::createProgram program = %d", program);
     return program;
 }
 

@@ -5,17 +5,23 @@
 #include <GLUtils.h>
 #include "TriangleSample.h"
 
-TriangleSample::TriangleSample() = default;
+TriangleSample::TriangleSample() {
+    LOGD("TriangleSample::TriangleSample()");
+}
 
-TriangleSample::~TriangleSample() = default;
+TriangleSample::~TriangleSample() {
+    LOGD("TriangleSample::~TriangleSample()");
+}
 
 void TriangleSample::loadImage(NativeImage *pImage) {
+    LOGD("TriangleSample::loadImage()");
     // do Nothing
 }
 
 void TriangleSample::init() {
-    if (m_programObj != 0)
-        return;
+    LOGD("TriangleSample::init()");
+//    if (m_programObj != 0)
+//        return;
     char vShaderStr[] =
             "#version 300 es                          \n"
             "layout(location = 0) in vec4 vPosition;  \n"
@@ -37,6 +43,7 @@ void TriangleSample::init() {
 }
 
 void TriangleSample::draw(int screenW, int screenH) {
+    LOGD("TriangleSample::draw() screenW=%d, screenH=%d", screenW, screenH);
     GLfloat vVertices[] = {
             0.0f, 0.5f, 0.0f,
             -0.5f, -0.5f, 0.0f,
@@ -61,6 +68,7 @@ void TriangleSample::draw(int screenW, int screenH) {
 }
 
 void TriangleSample::destroy() {
+    LOGD("TriangleSample::destroy() m_programObj=%d", m_programObj);
     if (m_programObj) {
         glDeleteProgram(m_programObj);
         m_programObj = GL_NONE;
