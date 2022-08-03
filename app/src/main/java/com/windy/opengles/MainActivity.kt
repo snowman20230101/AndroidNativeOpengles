@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.windy.opengles.databinding.ActivityMainBinding
 import com.windy.opengles.render.GLCustomSurfaceView
 import com.windy.opengles.render.GlCustomRender
+import com.windy.opengles.util.ShaderUtil
 
 class MainActivity : AppCompatActivity() {
 
@@ -16,11 +17,12 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        ShaderUtil.setContext(this);
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         // Example of a call to a native method
-//        binding.sampleText.text = stringFromJNI()
+        stringFromJNI()
 
         render.init()
         val glView = GLCustomSurfaceView(this, render)

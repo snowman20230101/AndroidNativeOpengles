@@ -10,7 +10,8 @@ file(GLOB source_file *.cpp
         ${CMAKE_SOURCE_DIR}/native-samples/*.cpp
         ${CMAKE_SOURCE_DIR}/render/*.cpp
         ${CMAKE_SOURCE_DIR}/util/*.cpp
-        CommonInclude.cpp
+        ${CMAKE_SOURCE_DIR}/platform/*.cpp
+        ${CMAKE_SOURCE_DIR}/platform/ccUTF8.cpp
 )
 
 include_directories(
@@ -18,6 +19,7 @@ include_directories(
         ${CMAKE_SOURCE_DIR}/glm
         ${CMAKE_SOURCE_DIR}/looper
         ${CMAKE_SOURCE_DIR}/native-samples
+        ${CMAKE_SOURCE_DIR}/platform
         ${CMAKE_SOURCE_DIR}/render
         ${CMAKE_SOURCE_DIR}/util
         ${CMAKE_SOURCE_DIR}

@@ -1,10 +1,11 @@
 #include "CommonInclude.h"
 #include "GLRenderContext.h"
+#include "CallJavaHelper.h"
 
 extern "C" JNIEXPORT jstring JNICALL
-Java_com_windy_opengles_MainActivity_stringFromJNI(
-        JNIEnv *env,
-        jobject /* this */) {
+Java_com_windy_opengles_MainActivity_stringFromJNI(JNIEnv *env, jobject thiz) {
+    LOGD("env=%p , jvm env is %p", env, CallJavaHelper::getEnv());
+    CallJavaHelper::setClassLoaderFrom(thiz);
     std::string hello = "Hello from C++";
     return env->NewStringUTF(hello.c_str());
 }

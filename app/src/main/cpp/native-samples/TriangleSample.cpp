@@ -4,6 +4,7 @@
 
 #include <GLUtils.h>
 #include "TriangleSample.h"
+#include "ResourceManager.h"
 
 TriangleSample::TriangleSample() {
     LOGD("TriangleSample::TriangleSample()");
@@ -38,6 +39,10 @@ void TriangleSample::init() {
             "{                                            \n"
             "   fragColor = vec4 ( 1.0, 0.0, 0.0, 1.0 );  \n"
             "}                                            \n";
+
+
+    auto res = ResourceManager::getInstance()->getShader2Triangle();
+    LOGD("TriangleSample::init() shaderRes=%s", res.c_str());
 
     m_programObj = GLUtils::createProgram(vShaderStr, fShaderStr, m_vertexShader, m_fragmentShader);
 }
