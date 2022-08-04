@@ -23,28 +23,15 @@ void TriangleSample::init() {
     LOGD("TriangleSample::init()");
     if (m_programObj != 0)
         return;
-    char vShaderStr[] =
-            "#version 300 es                          \n"
-            "layout(location = 0) in vec4 vPosition;  \n"
-            "void main()                              \n"
-            "{                                        \n"
-            "   gl_Position = vPosition;              \n"
-            "}                                        \n";
 
-    char fShaderStr[] =
-            "#version 300 es                              \n"
-            "precision mediump float;                     \n"
-            "out vec4 fragColor;                          \n"
-            "void main()                                  \n"
-            "{                                            \n"
-            "   fragColor = vec4 ( 1.0, 0.0, 0.0, 1.0 );  \n"
-            "}                                            \n";
+    char *vStr = ResourceManager::getInstance()->getShader2Triangle("triangle_vertex.glsl");
+    char *fStr = ResourceManager::getInstance()->getShader2Triangle("triangle_fragment.glsl");
+    LOGD("TriangleSample::init() \nvStr=%s\n, fStr=%s", vStr, fStr);
 
+    m_programObj = GLUtils::createProgram(vStr, fStr, m_vertexShader, m_fragmentShader);
 
-    auto res = ResourceManager::getInstance()->getShader2Triangle();
-    LOGD("TriangleSample::init() shaderRes=%s", res.c_str());
-
-    m_programObj = GLUtils::createProgram(vShaderStr, fShaderStr, m_vertexShader, m_fragmentShader);
+    free(vStr);
+    free(fStr);
 }
 
 void TriangleSample::draw(int screenW, int screenH) {

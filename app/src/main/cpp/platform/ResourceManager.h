@@ -14,6 +14,9 @@ public:
     static ResourceManager *getInstance();
 
     std::string getShader2Triangle();
+    char* getShader2Triangle(const char *);
+
+    void setAssetManager(AAssetManager *manager);
 
 private:
     ResourceManager();
@@ -21,6 +24,8 @@ private:
     ~ResourceManager();
 
     static ResourceManager *instance;
+
+    AAssetManager *assetManager = nullptr;
 };
 
 

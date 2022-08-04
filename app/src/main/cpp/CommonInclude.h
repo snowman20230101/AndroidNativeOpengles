@@ -8,6 +8,7 @@
 // android 头文件
 #include <jni.h>
 #include <android/log.h>
+#include <android/asset_manager_jni.h>
 #include <sys/time.h>
 
 // 标准库

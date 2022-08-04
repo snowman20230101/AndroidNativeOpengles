@@ -313,8 +313,3 @@ jclass _getClassID(const char *className) {
 void _detachCurrentThread(void *args) {
     CallJavaHelper::getJavaVM()->DetachCurrentThread();
 }
-
-JNIEXPORT jint JNI_OnLoad(JavaVM *vm, void *reserved) {
-    CallJavaHelper::setJavaVM(vm);
-    return JNI_VERSION_1_4;
-}

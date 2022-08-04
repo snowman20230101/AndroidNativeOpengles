@@ -1,5 +1,7 @@
 package com.windy.opengles
 
+import android.content.Context
+import android.content.res.AssetManager
 import android.os.Bundle
 import android.view.ViewGroup
 import android.widget.RelativeLayout
@@ -18,6 +20,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         ShaderUtil.setContext(this);
+        nativeSetContext(this, assets)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -43,6 +46,8 @@ class MainActivity : AppCompatActivity() {
      * which is packaged with this application.
      */
     external fun stringFromJNI(): String
+
+    external fun nativeSetContext(context: Context, assetManager: AssetManager)
 
     companion object {
         // Used to load the 'opengles' library on application startup.
