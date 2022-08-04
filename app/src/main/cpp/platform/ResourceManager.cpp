@@ -43,7 +43,7 @@ void ResourceManager::setAssetManager(AAssetManager *manager) {
  * @param fileName
  * @return
  */
-char *ResourceManager::getShader2Triangle(const char *fileName) {
+const char *ResourceManager::getShaderSource(const char *fileName) {
     AAsset *asset = AAssetManager_open(assetManager, fileName, AASSET_MODE_UNKNOWN);
     off_t len = AAsset_getLength(asset);
     char *buffer = static_cast<char *>(malloc(sizeof(char *) + len + 1));

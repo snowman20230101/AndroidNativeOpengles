@@ -8,7 +8,6 @@
 
 #include <GLSampleBase.h>
 #include "CommonInclude.h"
-#include "TriangleSample.h"
 
 class GLRenderContext {
 public:
@@ -21,6 +20,13 @@ public:
     void onSurfaceChanged(int width, int height);
 
     void onDrawFrame();
+
+
+    void setImageData(int format, int width, int height, uint8_t *pData);
+
+    void setImageDataWithIndex(int index, int format, int width, int height, uint8_t *pData);
+
+    void updateTransformMatrix(float rotateX, float rotateY, float scaleX, float scaleY);
 
 private:
     GLRenderContext();

@@ -27,4 +27,12 @@ class GlCustomRender constructor() : GLSurfaceView.Renderer {
     fun unInit() {
         nativeRender.native_unInit()
     }
+
+    fun setImageData(format: Int, width: Int, height: Int, bytes: ByteArray?) {
+        nativeRender.native_setImageData(format, width, height, bytes)
+    }
+
+    fun setImageDataWithIndex(index: Int, format: Int, width: Int, height: Int, bytes: ByteArray?) {
+        nativeRender.native_setImageDataWithIndex(index, format, width, height, bytes)
+    }
 }

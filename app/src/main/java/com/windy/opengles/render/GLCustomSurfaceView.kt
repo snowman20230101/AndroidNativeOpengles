@@ -30,6 +30,19 @@ class GLCustomSurfaceView(
         setRenderer(render)
         // 设置按需渲染 当我们调用 requestRender 请求GLThread 回调一次 onDrawFrame
         // 连续渲染 就是自动的回调onDrawFrame
-        renderMode = RENDERMODE_WHEN_DIRTY
+//        renderMode = RENDERMODE_WHEN_DIRTY
+        renderMode = RENDERMODE_CONTINUOUSLY
+    }
+
+    companion object {
+        private const val TOUCH_SCALE_FACTOR = 180.0f / 320
+
+        const val IMAGE_FORMAT_RGBA = 0x01
+        const val IMAGE_FORMAT_NV21 = 0x02
+        const val IMAGE_FORMAT_NV12 = 0x03
+        const val IMAGE_FORMAT_I420 = 0x04
+        const val IMAGE_FORMAT_YUYV = 0x05
+        const val IMAGE_FORMAT_GARY = 0x06
+
     }
 }

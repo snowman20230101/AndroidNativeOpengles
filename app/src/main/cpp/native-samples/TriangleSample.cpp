@@ -24,14 +24,11 @@ void TriangleSample::init() {
     if (m_programObj != 0)
         return;
 
-    char *vStr = ResourceManager::getInstance()->getShader2Triangle("triangle_vertex.glsl");
-    char *fStr = ResourceManager::getInstance()->getShader2Triangle("triangle_fragment.glsl");
+    const char *vStr = ResourceManager::getInstance()->getShaderSource("triangle_vertex.glsl");
+    const char *fStr = ResourceManager::getInstance()->getShaderSource("triangle_fragment.glsl");
     LOGD("TriangleSample::init() \nvStr=%s\n, fStr=%s", vStr, fStr);
 
     m_programObj = GLUtils::createProgram(vStr, fStr, m_vertexShader, m_fragmentShader);
-
-    free(vStr);
-    free(fStr);
 }
 
 void TriangleSample::draw(int screenW, int screenH) {

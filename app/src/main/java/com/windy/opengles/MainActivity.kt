@@ -2,14 +2,19 @@ package com.windy.opengles
 
 import android.content.Context
 import android.content.res.AssetManager
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.ViewGroup
 import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.windy.opengles.databinding.ActivityMainBinding
 import com.windy.opengles.render.GLCustomSurfaceView
+import com.windy.opengles.render.GLCustomSurfaceView.Companion.IMAGE_FORMAT_RGBA
 import com.windy.opengles.render.GlCustomRender
 import com.windy.opengles.util.ShaderUtil
+import java.io.IOException
+import java.nio.ByteBuffer
 
 class MainActivity : AppCompatActivity() {
 
@@ -21,11 +26,9 @@ class MainActivity : AppCompatActivity() {
 
         ShaderUtil.setContext(this);
         nativeSetContext(this, assets)
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        // Example of a call to a native method
-        stringFromJNI()
 
         render.init()
         val glView = GLCustomSurfaceView(this, render)
@@ -34,6 +37,8 @@ class MainActivity : AppCompatActivity() {
         )
         lp.addRule(RelativeLayout.CENTER_IN_PARENT)
         binding.root.addView(glView, lp)
+
+//        loadRGBAImage(R.drawable.noise)
     }
 
     override fun onDestroy() {
@@ -41,11 +46,27 @@ class MainActivity : AppCompatActivity() {
         render.unInit()
     }
 
-    /**
-     * A native method that is implemented by the 'opengles' native library,
-     * which is packaged with this application.
-     */
-    external fun stringFromJNI(): String
+    private fun loadRGBAImage(resId: Int): Bitmap? {
+        val inputStream = this.resources.openRawResource(resId)
+        val bitmap: Bitmap?
+        try {
+            bitmap = BitmapFactory.decodeStream(inputStream)
+            if (bitmap != null) {
+                val bytes = bitmap.byteCount
+                val buf = ByteBuffer.allocate(bytes)
+                bitmap.copyPixelsToBuffer(buf)
+                val byteArray = buf.array()
+                render.setImageData(IMAGE_FORMAT_RGBA, bitmap.width, bitmap.height, byteArray)
+            }
+        } finally {
+            try {
+                inputStream.close()
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }
+        return bitmap
+    }
 
     external fun nativeSetContext(context: Context, assetManager: AssetManager)
 
