@@ -2,7 +2,7 @@
 // Created by windy on 2022/8/2.
 //
 
-#include <GLUtils.h>
+#include "GLUtils.h"
 #include "TriangleSample.h"
 #include "ResourceManager.h"
 
@@ -26,18 +26,15 @@ void TriangleSample::init() {
 
     const char *vStr = ResourceManager::getInstance()->getShaderSource("triangle_vertex.glsl");
     const char *fStr = ResourceManager::getInstance()->getShaderSource("triangle_fragment.glsl");
-    LOGD("TriangleSample::init() \nvStr=%s\n, fStr=%s", vStr, fStr);
-
     m_programObj = GLUtils::createProgram(vStr, fStr, m_vertexShader, m_fragmentShader);
+
+    // Load the vertex data
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, vVertices);
+    glEnableVertexAttribArray(0);
 }
 
 void TriangleSample::draw(int screenW, int screenH) {
     LOGD("TriangleSample::draw() screenW=%d, screenH=%d", screenW, screenH);
-    GLfloat vVertices[] = {
-            0.0f, 0.5f, 0.0f,
-            -0.5f, -0.5f, 0.0f,
-            0.5f, -0.5f, 0.0f,
-    };
 
     if (m_programObj == 0) {
         LOGI("TriangleSample::draw() m_programObj=%d", m_programObj);
@@ -49,11 +46,6 @@ void TriangleSample::draw(int screenW, int screenH) {
 
     // Use the program object
     glUseProgram(m_programObj);
-
-    // Load the vertex data
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, vVertices);
-    glEnableVertexAttribArray(0);
-
     glDrawArrays(GL_TRIANGLES, 0, 3);
     glUseProgram(GL_NONE);
 }

@@ -21,12 +21,17 @@ public:
 
     void onDrawFrame();
 
-
     void setImageData(int format, int width, int height, uint8_t *pData);
 
     void setImageDataWithIndex(int index, int format, int width, int height, uint8_t *pData);
 
     void updateTransformMatrix(float rotateX, float rotateY, float scaleX, float scaleY);
+
+    void setParamsFloat(int paramType, float value0, float value1);
+
+    void setParamsInt(int paramType, int value0, int value1);
+
+    void setParamsShortArr(short *const pShortArr, int arrSize);
 
 private:
     GLRenderContext();

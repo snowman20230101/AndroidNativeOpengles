@@ -6,7 +6,7 @@
 #define ANDROIDNATIVEOPENGLES_TRIANGLESAMPLE_H
 
 
-#include <ImageDef.h>
+#include "ImageDef.h"
 #include "GLSampleBase.h"
 
 class TriangleSample : public GLSampleBase {
@@ -14,15 +14,22 @@ class TriangleSample : public GLSampleBase {
 public:
     TriangleSample();
 
-    ~TriangleSample();
+    ~TriangleSample() override;
 
-    virtual void loadImage(NativeImage *pImage);
+    virtual void loadImage(NativeImage *pImage) override;
 
-    virtual void init();
+    virtual void init() override;
 
-    virtual void draw(int screenW, int screenH);
+    virtual void draw(int screenW, int screenH) override;
 
-    virtual void destroy();
+    virtual void destroy() override;
+
+private:
+    GLfloat vVertices[9] = {
+            0.0f, 0.5f, 0.0f,
+            -0.5f, -0.5f, 0.0f,
+            0.5f, -0.5f, 0.0f,
+    };
 };
 
 

@@ -3,6 +3,7 @@ precision highp float;
 layout(location = 0) out vec4 outColor;
 uniform float u_time;
 uniform vec2 u_screenSize;
+uniform sampler2D s_TextureMap;
 
 void main() {
     vec2 fragCoord = gl_FragCoord.xy;

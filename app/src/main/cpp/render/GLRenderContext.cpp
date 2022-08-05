@@ -3,15 +3,17 @@
 //
 
 #include "TriangleSample.h"
-#include <BeatingHeartSample.h>
+#include "BeatingHeartSample.h"
 #include "GLRenderContext.h"
+#include "CloudSample.h"
 
 GLRenderContext *GLRenderContext::instance = nullptr;
 
 GLRenderContext::GLRenderContext() {
     LOGD("GLRenderContext::GLRenderContext()");
-//    m_pCurSample = new TriangleSample();
-    m_pCurSample = new BeatingHeartSample();
+//    m_pCurSample = new BeatingHeartSample();
+    m_pCurSample = new TriangleSample();
+//    m_pCurSample = new CloudSample();
 }
 
 GLRenderContext::~GLRenderContext() {
@@ -35,7 +37,7 @@ void GLRenderContext::destroyInstance() {
 
 void GLRenderContext::onSurfaceCreated() {
     LOGD("GLRenderContext::onSurfaceCreated()");
-//    glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+    glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     // call to OpenGL ES API with no current context (logged once per thread)
     // TODO 这里opengl 的 东西必须在 GLThread 中调用
     m_pCurSample->init();
@@ -49,7 +51,10 @@ void GLRenderContext::onSurfaceChanged(int width, int height) {
 }
 
 void GLRenderContext::onDrawFrame() {
-//    LOGD("GLRenderContext::onDrawFrame()");
+    LOGD("GLRenderContext::onDrawFrame()");
+
+    glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+
     if (m_pBeforeSample != nullptr) {
         m_pBeforeSample->destroy();
         delete m_pBeforeSample;
@@ -57,6 +62,7 @@ void GLRenderContext::onDrawFrame() {
     }
 
     if (m_pCurSample != nullptr) {
+//        m_pCurSample->init();
         m_pCurSample->draw(m_screenW, m_screenH);
     }
 }
@@ -124,5 +130,54 @@ void GLRenderContext::updateTransformMatrix(float rotateX, float rotateY,
 
     if (m_pCurSample) {
         m_pCurSample->updateTransformMatrix(rotateX, rotateY, scaleX, scaleY);
+    }
+}
+
+void GLRenderContext::setParamsFloat(int paramType, float value0, float value1) {
+    LOGD("GLRenderContext::setParamsFloat paramType=%d, value0=%f, value1=%f", paramType,
+         value0, value1);
+
+    if (m_pCurSample) {
+        switch (paramType) {
+            case SAMPLE_TYPE_KEY_SET_TOUCH_LOC:
+                m_pCurSample->setTouchLocation(value0, value1);
+                break;
+            case SAMPLE_TYPE_SET_GRAVITY_XY:
+                m_pCurSample->setGravityXY(value0, value1);
+                break;
+            default:
+                break;
+        }
+    }
+}
+
+void GLRenderContext::setParamsInt(int paramType, int value0, int value1) {
+    LOGD("MyGLRenderContext::SetParamsInt paramType = %d, value0 = %d, value1 = %d", paramType,
+         value0, value1);
+
+    if (paramType == SAMPLE_TYPE) {
+        m_pBeforeSample = m_pCurSample;
+
+        LOGD("MyGLRenderContext::SetParamsInt 0 m_pBeforeSample = %p", m_pBeforeSample);
+
+        switch (value0) {
+            case SAMPLE_TYPE_KEY_TRIANGLE:
+                m_pCurSample = new TriangleSample();
+                break;
+            default:
+                m_pCurSample = nullptr;
+                break;
+        }
+
+        LOGD("GLRenderContext::SetParamsInt m_pBeforeSample = %p, m_pCurSample=%p", m_pBeforeSample,
+             m_pCurSample);
+    }
+}
+
+void GLRenderContext::setParamsShortArr(short *const pShortArr, int arrSize) {
+    LOGD("GLRenderContext::setParamsShortArr pShortArr=%p, arrSize=%d, pShortArr[0]=%d",
+         pShortArr, arrSize, pShortArr[0]);
+    if (m_pCurSample) {
+        m_pCurSample->loadShortArrData(pShortArr, arrSize);
     }
 }
