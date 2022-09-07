@@ -29,7 +29,51 @@ void BeatingHeartSample::init() {
     if (m_programObj != 0)
         return;
 
-    // create RGBA texture
+    // TODO 1、创建着色器程序
+    const char *vStr = ResourceManager::getInstance()->getShaderSource("beatingheart_vertex.glsl");
+    const char *fStr = ResourceManager::getInstance()->getShaderSource(
+            "beatingheart_fragment.glsl");
+    m_programObj = GLUtils::createProgram(vStr, fStr, m_vertexShader, m_fragmentShader);
+
+    if (m_programObj) {
+        // m_SamplerLoc = glGetUniformLocation(m_ProgramObj, "s_TextureMap");
+        // 顶点着色器
+        m_MVPMatLoc = glGetUniformLocation(m_programObj, "u_MVPMatrix");
+        // 片元着色器
+        m_SizeLoc = glGetUniformLocation(m_programObj, "u_screenSize");
+        m_TimeLoc = glGetUniformLocation(m_programObj, "u_time");
+    } else {
+        LOGE("BeatingHeartSample::init() create program failed. ");
+    }
+
+    // TODO 2、创建一个顶点数组对象 VAO 对象 其实叫申请内存
+    glGenVertexArrays(1, &VAO);
+    glBindVertexArray(VAO);
+
+    // TODO 3、创建一个顶点缓冲对象。 VBO 对象 其实叫申请内存
+    // 顶点坐标
+    glGenBuffers(3, VBOs);
+    glBindBuffer(GL_ARRAY_BUFFER, VBOs[0]);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(verticesCoords), verticesCoords, GL_STATIC_DRAW);
+
+    // 纹理坐标
+    glBindBuffer(GL_ARRAY_BUFFER, VBOs[1]);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(textureCoords), textureCoords, GL_STATIC_DRAW);
+
+    // EBO
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VBOs[2]);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+    // TODO 4、设置顶点属性指针，glVertexAttribPointer()函数告诉OpenGL该如何解析顶点数据
+    glBindBuffer(GL_ARRAY_BUFFER, VBOs[0]);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (const void *) 0);
+    glEnableVertexAttribArray(0);
+
+    glBindBuffer(GL_ARRAY_BUFFER, VBOs[1]);
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), (const void *) 0);
+
+    // TODO 5、创建 RGBA texture
     glGenTextures(1, &m_textureId);
     glBindTexture(GL_TEXTURE_2D, m_textureId);
 
@@ -41,47 +85,8 @@ void BeatingHeartSample::init() {
 
     glBindTexture(GL_TEXTURE_2D, GL_NONE);
 
-    const char *vStr = ResourceManager::getInstance()->getShaderSource("beatingheart_vertex.glsl");
-    const char *fStr = ResourceManager::getInstance()->getShaderSource(
-            "beatingheart_fragment.glsl");
-    m_programObj = GLUtils::createProgram(vStr, fStr, m_vertexShader, m_fragmentShader);
-
-    if (m_programObj) {
-        // m_SamplerLoc = glGetUniformLocation(m_ProgramObj, "s_TextureMap");
-        m_MVPMatLoc = glGetUniformLocation(m_programObj, "u_MVPMatrix");
-        m_SizeLoc = glGetUniformLocation(m_programObj, "u_screenSize");
-        m_TimeLoc = glGetUniformLocation(m_programObj, "u_time");
-    } else {
-        LOGE("BeatingHeartSample::init() create program failed. ");
-    }
-
-    // Generate VBO Ids and load the VBOs with data
-    glGenBuffers(3, m_VboIds);
-    glBindBuffer(GL_ARRAY_BUFFER, m_VboIds[0]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(verticesCoords), verticesCoords, GL_STATIC_DRAW);
-
-//    glBindBuffer(GL_ARRAY_BUFFER, m_VboIds[1]);
-//    glBufferData(GL_ARRAY_BUFFER, sizeof(textureCoords), textureCoords, GL_STATIC_DRAW);
-
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_VboIds[2]);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-    // Generate VAO Id
-    glGenVertexArrays(1, &m_VaoId);
-    glBindVertexArray(m_VaoId);
-
-    glBindBuffer(GL_ARRAY_BUFFER, m_VboIds[0]);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (const void *) 0);
-    glEnableVertexAttribArray(0);
+    // TODO 6、解绑
     glBindBuffer(GL_ARRAY_BUFFER, GL_NONE);
-
-//	glBindBuffer(GL_ARRAY_BUFFER, m_VboIds[1]);
-//	glEnableVertexAttribArray(1);
-//	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), (const void *)0);
-//	glBindBuffer(GL_ARRAY_BUFFER, GL_NONE);
-
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_VboIds[2]);
-
     glBindVertexArray(GL_NONE);
 }
 
@@ -90,18 +95,27 @@ void BeatingHeartSample::draw(int screenW, int screenH) {
 
     updateMVPMatrix(m_MVPMatrix, m_AngleX, m_AngleY, (float) screenW / screenH);
 
-    // upload RGBA image data
-//	glActiveTexture(GL_TEXTURE0);
-//	glBindTexture(GL_TEXTURE_2D, m_TextureId);
-//	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_RenderImage.width, m_RenderImage.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, m_RenderImage.ppPlane[0]);
-//	glBindTexture(GL_TEXTURE_2D, GL_NONE);
-
     // Use the program object
     glUseProgram(m_programObj);
 
-    glBindVertexArray(m_VaoId);
+    // upload RGBA image data
+//    glActiveTexture(GL_TEXTURE0);
+//    glBindTexture(GL_TEXTURE_2D, m_textureId);
+//    glTexImage2D(GL_TEXTURE_2D,
+//                 0, GL_RGBA,
+//                 m_RenderImage.width,
+//                 m_RenderImage.height,
+//                 0, GL_RGBA,
+//                 GL_UNSIGNED_BYTE,
+//                 m_RenderImage.ppPlane[0]
+//    );
 
+    // Use VAO
+    glBindVertexArray(VAO);
+
+    // 设置顶点着色器
     glUniformMatrix4fv(m_MVPMatLoc, 1, GL_FALSE, &m_MVPMatrix[0][0]);
+
     float time = static_cast<float>(fmod(GetSysCurrentTime(), 2000) / 2000);
 
     LOGD("BeatingHeartSample::Draw() time=%f", time);
@@ -109,10 +123,10 @@ void BeatingHeartSample::draw(int screenW, int screenH) {
     glUniform1f(m_TimeLoc, time);
     glUniform2f(m_SizeLoc, screenW, screenH);
 
-//	// Bind the RGBA map
-//	glActiveTexture(GL_TEXTURE0);
-//	glBindTexture(GL_TEXTURE_2D, m_TextureId);
-//	glUniform1i(m_SamplerLoc, 0);
+    // Bind the RGBA map
+//    glActiveTexture(GL_TEXTURE0);
+//    glBindTexture(GL_TEXTURE_2D, m_textureId);
+//    glUniform1i(m_SamplerLoc, 0);
 
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, (const void *) 0);
 }
@@ -121,11 +135,11 @@ void BeatingHeartSample::destroy() {
     LOGD("BeatingHeartSample::destroy() m_programObj=%d", m_programObj);
 
     if (m_programObj) {
+        glDeleteTextures(1, &m_textureId);
+        glDeleteVertexArrays(1, &VAO);
+        glDeleteBuffers(3, VBOs);
         glDeleteProgram(m_programObj);
         m_programObj = GL_NONE;
-        glDeleteBuffers(3, m_VboIds);
-        glDeleteVertexArrays(1, &m_VaoId);
-        glDeleteTextures(1, &m_textureId);
     }
 }
 

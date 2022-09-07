@@ -11,8 +11,8 @@ GLRenderContext *GLRenderContext::instance = nullptr;
 
 GLRenderContext::GLRenderContext() {
     LOGD("GLRenderContext::GLRenderContext()");
-//    m_pCurSample = new BeatingHeartSample();
-    m_pCurSample = new TriangleSample();
+    m_pCurSample = new BeatingHeartSample();
+//    m_pCurSample = new TriangleSample();
 //    m_pCurSample = new CloudSample();
 }
 
